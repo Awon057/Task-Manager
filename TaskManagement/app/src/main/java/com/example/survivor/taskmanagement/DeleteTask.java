@@ -1,6 +1,7 @@
 package com.example.survivor.taskmanagement;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,11 +43,17 @@ public class DeleteTask extends AppCompatActivity {
                         Toast.makeText(DeleteTask.this, "Please fill all fields" , Toast.LENGTH_LONG).show();
                     else {
                         int idnumber = Integer.parseInt(text.getText().toString());
-                        if(idnumber>0){
+
+                        Cursor cusror;
+                        cusror = sqliteDB.rawQuery("SELECT Id FROM Task WHERE Id = " +idnumber,null);
+
+                        if(cusror.moveToFirst()){
                             sqliteDB.delete("Task","Id = "+idnumber,null);
                             Toast.makeText(DeleteTask.this, "Data of ID= "+idnumber+" Deleted", Toast.LENGTH_LONG).show();
-
                         }
+                        else
+                            Toast.makeText(DeleteTask.this, "Data of ID= "+idnumber+" is not available in database", Toast.LENGTH_LONG).show();
+
                     }
                 }
                 catch (Exception e){

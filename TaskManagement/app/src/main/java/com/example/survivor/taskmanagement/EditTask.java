@@ -2,6 +2,7 @@ package com.example.survivor.taskmanagement;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -67,7 +68,9 @@ public class EditTask extends AppCompatActivity {
                     else
                     {
                         int idnumber = Integer.parseInt(text.getText().toString());
-                        if(idnumber>0){
+                        Cursor cusror;
+                        cusror = sqliteDB.rawQuery("SELECT Id FROM Task WHERE Id = " +idnumber,null);
+                        if(cusror.moveToFirst()){
                             ContentValues cv = new ContentValues();
                             cv.put("Name",name.getText().toString());
                             cv.put("Description",description.getText().toString());
@@ -75,6 +78,8 @@ public class EditTask extends AppCompatActivity {
                             sqliteDB.update("Task", cv, "Id = "+idnumber, null);
                             Toast.makeText(EditTask.this, "Data Updated", Toast.LENGTH_LONG).show();
                         }
+                        else
+                            Toast.makeText(EditTask.this, "Data of ID= "+idnumber+" is not available in database.Please create first", Toast.LENGTH_LONG).show();
                     }
                 }
                 catch(Exception e){
